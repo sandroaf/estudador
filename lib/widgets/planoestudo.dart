@@ -37,8 +37,7 @@ class _PlanoEstudoPageState extends State<PlanoEstudoPage> {
   }
 
   _editarDoPlano(NivelModel n) {
-    setState((){}
-    )
+    setState(() {});
   }
 
   _removeDoPlano(index) {
