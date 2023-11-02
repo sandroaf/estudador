@@ -14,14 +14,12 @@ class _PlanoEstudoPageState extends State<PlanoEstudoPage> {
 
   var descricaoCtrl = TextEditingController();
   var qtdHorasCtrl = TextEditingController();
+  var currentIndex;
 
   _save() {}
 
   _addAoPlano() {
-    if (descricaoCtrl.text == null ||
-        descricaoCtrl.text.trim().isEmpty ||
-        qtdHorasCtrl.text == null ||
-        qtdHorasCtrl.text.trim().isEmpty) {
+    if (_validarNivel()) {
       return;
     }
     setState(() {
@@ -36,8 +34,34 @@ class _PlanoEstudoPageState extends State<PlanoEstudoPage> {
     print(_planoEstudo);
   }
 
+  _AlterarDoPlano() {
+    if (_validarNivel()) {
+      return;
+    }
+    setState(() {
+      var nivel = _planoEstudo.niveis[currentIndex];
+      nivel.descricao = descricaoCtrl.text;
+      nivel.qtdhoras = int.parse(qtdHorasCtrl.text);
+      descricaoCtrl.clear();
+      qtdHorasCtrl.clear();
+      currentIndex = null;
+    });
+    print(_planoEstudo);
+  }
+
+  bool _validarNivel() {
+    return descricaoCtrl.text == null ||
+        descricaoCtrl.text.trim().isEmpty ||
+        qtdHorasCtrl.text == null ||
+        qtdHorasCtrl.text.trim().isEmpty;
+  }
+
   _editarDoPlano(NivelModel n) {
-    setState(() {});
+    currentIndex = _planoEstudo.niveis.indexOf(n);
+    setState(() {
+      descricaoCtrl.text = n.descricao;
+      qtdHorasCtrl.text = '${n.qtdhoras}';
+    });
   }
 
   _removeDoPlano(index) {
@@ -106,12 +130,22 @@ class _PlanoEstudoPageState extends State<PlanoEstudoPage> {
                           ),
                           style: TextStyle(fontSize: 20),
                         )),
-                    Expanded(
-                        flex: 1,
-                        child: IconButton(
-                          icon: Icon(Icons.add),
-                          onPressed: _addAoPlano,
-                        ))
+                    Visibility(
+                        visible: currentIndex == null,
+                        child: Expanded(
+                            flex: 1,
+                            child: IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: _addAoPlano,
+                            ))),
+                    Visibility(
+                        visible: currentIndex != null,
+                        child: Expanded(
+                            flex: 1,
+                            child: IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: _AlterarDoPlano,
+                            ))),
                   ],
                 )),
             Container(
@@ -156,11 +190,15 @@ class _PlanoEstudoPageState extends State<PlanoEstudoPage> {
                         ));
                   }).toList(),
                 )),
-          ]),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _save(),
-        child: Icon(Icons.check),
-      ),
-    );
+          ])
+        Visibility(
+          visible: _planoEstudo.titulo != null &&
+            _planoEstudo.titulo.trim().isNotEmpty &&
+            _planoEstudo.niveis.isNotEmpty, 
+          child: FloatingActionButton(
+            onPressed: () => _save(),
+            child: Icon(Icons.check),
+          ),
+      );
   }
 }
