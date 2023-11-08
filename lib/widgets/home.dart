@@ -1,5 +1,7 @@
+import 'package:estudador/models/planoestudo.dart';
 import 'package:estudador/widgets/planoestudo.dart';
 import 'package:flutter/material.dart';
+import 'package:estudador/services/planoestudo.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,17 +14,63 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
+  PlanoEstudoService _planoEstudoService = PlanoEstudoService();
+  List<PlanoEstudoModel> _planos = [];
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  List<Widget> _buildPlanosEstudos() {
+    return _planos.map((p) {
+      return GestureDetector(
+        onTap: () {
+          //TODO: Cronometro
+        },
+        child: Card(
+          child: Container(
+              padding: EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                      flex: 3,
+                      child: Text(p.titulo,
+                          style: TextStyle(
+                            fontSize: 18,
+                          ))),
+                  Expanded(
+                      flex: 2,
+                      child: Text('${_printDuration(p.tempoestudado)} estudao',
+                          style: TextStyle(
+                            fontSize: 18,
+                          ))),
+                  Expanded(
+                      child: Text(p.nivelatual.descricao,
+                          style: TextStyle(
+                            fontSize: 18,
+                          ))),
+                ],
+              )),
+        ),
+      );
+    }).toList();
+  }
+
+  String _printDuration([seconds = 0]) {
+    var duration = Duration(microseconds: seconds * 1000);
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
   @override
   void initState() {
     super.initState();
+    _planoEstudoService.list().then((planos) {
+      print(planos);
+      if (planos != null) {
+        setState(() {
+          this._planos = planos;
+        });
+      }
+    });
     initialization();
   }
 
@@ -31,6 +79,8 @@ class _HomePageState extends State<HomePage> {
     // the splash screen is displayed.  Remove the following example because
     // delaying the user experience is a bad design practice!
     // ignore_for_file: avoid_print
+
+    /*
     print('ready in 3...');
     await Future.delayed(const Duration(seconds: 1));
     print('ready in 2...');
@@ -38,6 +88,8 @@ class _HomePageState extends State<HomePage> {
     print('ready in 1...');
     await Future.delayed(const Duration(seconds: 1));
     print('go!');
+    */
+
     FlutterNativeSplash.remove();
   }
 
@@ -45,22 +97,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
+      body: ListView(
+        children: _buildPlanosEstudos(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

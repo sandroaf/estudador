@@ -1,5 +1,6 @@
 import 'package:estudador/models/planoestudo.dart';
 import 'package:estudador/models/nivel.dart';
+import 'package:estudador/services/planoestudo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -11,12 +12,19 @@ class PlanoEstudoPage extends StatefulWidget {
 class _PlanoEstudoPageState extends State<PlanoEstudoPage> {
   //const PlanoEstudoPage({super.key});
   PlanoEstudoModel _planoEstudo = PlanoEstudoModel();
+  PlanoEstudoService _planoEstudoService = PlanoEstudoService();
 
   var descricaoCtrl = TextEditingController();
   var qtdHorasCtrl = TextEditingController();
   var currentIndex;
 
-  _save() {}
+  _save() async {
+    print('save');
+    _planoEstudo.niveis.sort((n1, n2) => n1.qtdhoras - n2.qtdhoras);
+    _planoEstudo.nivelatual = _planoEstudo.niveis.first;
+    await _planoEstudoService.save(_planoEstudo);
+    Navigator.pop(context);
+  }
 
   _addAoPlano() {
     if (_validarNivel()) {
@@ -190,15 +198,16 @@ class _PlanoEstudoPageState extends State<PlanoEstudoPage> {
                         ));
                   }).toList(),
                 )),
-          ])
-        Visibility(
-          visible: _planoEstudo.titulo != null &&
+          ]),
+      floatingActionButton: Visibility(
+        visible: _planoEstudo.titulo != null &&
             _planoEstudo.titulo.trim().isNotEmpty &&
-            _planoEstudo.niveis.isNotEmpty, 
-          child: FloatingActionButton(
-            onPressed: () => _save(),
-            child: Icon(Icons.check),
-          ),
-      );
+            _planoEstudo.niveis.isNotEmpty,
+        child: FloatingActionButton(
+          onPressed: () => _save(),
+          child: Icon(Icons.check),
+        ),
+      ),
+    );
   }
 }
