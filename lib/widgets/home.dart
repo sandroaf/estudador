@@ -14,35 +14,33 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  PlanoEstudoService _planoEstudoService = PlanoEstudoService();
+  final PlanoEstudoService _planoEstudoService = PlanoEstudoService();
   List<PlanoEstudoModel> _planos = [];
 
   List<Widget> _buildPlanosEstudos() {
     return _planos.map((p) {
       return GestureDetector(
-        onTap: () {
-          //TODO: Cronometro
-        },
+        onTap: () {}, //TODO CONOMETRO
         child: Card(
           child: Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
                   Expanded(
                       flex: 3,
                       child: Text(p.titulo,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
                           ))),
                   Expanded(
                       flex: 2,
-                      child: Text('${_printDuration(p.tempoestudado)} estudao',
-                          style: TextStyle(
+                      child: Text('${_printDuration(p.tempoestudado)} estudado',
+                          style: const TextStyle(
                             fontSize: 18,
                           ))),
                   Expanded(
                       child: Text(p.nivelatual.descricao,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
                           ))),
                 ],
@@ -65,11 +63,9 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _planoEstudoService.list().then((planos) {
       print(planos);
-      if (planos != null) {
-        setState(() {
-          this._planos = planos;
-        });
-      }
+      setState(() {
+        _planos = planos;
+      });
     });
     initialization();
   }
@@ -107,11 +103,11 @@ class _HomePageState extends State<HomePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PlanoEstudoPage(),
+                builder: (context) => const PlanoEstudoPage(),
               ));
         },
         tooltip: 'Adicionar',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

@@ -6,18 +6,18 @@ class NivelModel extends Model<NivelModel> {
 
   @override
   NivelModel fromJson(Map<String, dynamic> json) {
-    this.descricao = json['descricao'];
-    this.qtdhoras = json['qrdhoras'];
+    descricao = json['descricao'];
+    qtdhoras = json['qtdhoras'];
     throw '';
   }
 
   @override
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> json = Map();
-    json['descricao'] = this.descricao;
-    json['qtdhoras'] = this.qtdhoras;
+    Map<String, dynamic> json = {};
+    json['descricao'] = descricao;
+    json['qtdhoras'] = qtdhoras;
     return json;
   }
 
-  NivelModel({required this.descricao, required this.qtdhoras});
+  NivelModel({this.descricao = "", this.qtdhoras = 0});
 }

@@ -32,6 +32,7 @@ class PlanoEstudoService extends Service<PlanoEstudoModel> {
   @override
   Future<List<PlanoEstudoModel>> list() async {
     var prefs = await SharedPreferences.getInstance();
+    //await prefs.clear();
     var data = prefs.getString('planos');
     if (data != null) {
       List<Map> lista = json.decode(data);
@@ -48,9 +49,9 @@ class PlanoEstudoService extends Service<PlanoEstudoModel> {
   @override
   Future<PlanoEstudoModel> load(int index) async {
     List<PlanoEstudoModel> planos = await list();
-    if (planos != null && index < planos.length) {
+    if (index < planos.length) {
       return planos[index];
     }
-    return Future.value(null);
+    return null as PlanoEstudoModel;
   }
 }

@@ -2,21 +2,22 @@ import 'package:estudador/models/planoestudo.dart';
 import 'package:estudador/models/nivel.dart';
 import 'package:estudador/services/planoestudo.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class PlanoEstudoPage extends StatefulWidget {
+  const PlanoEstudoPage({super.key});
+
   @override
   State<PlanoEstudoPage> createState() => _PlanoEstudoPageState();
 }
 
 class _PlanoEstudoPageState extends State<PlanoEstudoPage> {
   //const PlanoEstudoPage({super.key});
-  PlanoEstudoModel _planoEstudo = PlanoEstudoModel();
-  PlanoEstudoService _planoEstudoService = PlanoEstudoService();
+  final PlanoEstudoModel _planoEstudo = PlanoEstudoModel();
+  final PlanoEstudoService _planoEstudoService = PlanoEstudoService();
 
   var descricaoCtrl = TextEditingController();
   var qtdHorasCtrl = TextEditingController();
-  var currentIndex;
+  var currentIndex = null;
 
   _save() async {
     print('save');
@@ -52,15 +53,13 @@ class _PlanoEstudoPageState extends State<PlanoEstudoPage> {
       nivel.qtdhoras = int.parse(qtdHorasCtrl.text);
       descricaoCtrl.clear();
       qtdHorasCtrl.clear();
-      currentIndex = null;
+      currentIndex = 0;
     });
     print(_planoEstudo);
   }
 
   bool _validarNivel() {
-    return descricaoCtrl.text == null ||
-        descricaoCtrl.text.trim().isEmpty ||
-        qtdHorasCtrl.text == null ||
+    return descricaoCtrl.text.trim().isEmpty ||
         qtdHorasCtrl.text.trim().isEmpty;
   }
 
@@ -83,20 +82,20 @@ class _PlanoEstudoPageState extends State<PlanoEstudoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Plano de Estudo'),
+        title: const Text('Plano de Estudo'),
       ),
       body: ListView(
-          padding: EdgeInsets.only(top: 48, left: 32, right: 32),
+          padding: const EdgeInsets.only(top: 48, left: 32, right: 32),
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(bottom: 8),
+              margin: const EdgeInsets.only(bottom: 8),
               child: TextFormField(
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.words,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Titulo",
                 ),
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
                 onChanged: (value) {
                   setState(() {
                     _planoEstudo.titulo = value;
@@ -105,26 +104,26 @@ class _PlanoEstudoPageState extends State<PlanoEstudoPage> {
               ),
             ),
             Container(
-                margin: EdgeInsets.only(bottom: 8, top: 8),
-                child: Text(
+                margin: const EdgeInsets.only(bottom: 8, top: 8),
+                child: const Text(
                   "Níveis",
                   style: TextStyle(
                     fontSize: 18,
                   ),
                 )),
             Container(
-                padding: EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.only(bottom: 8),
                 child: TextFormField(
                   controller: descricaoCtrl,
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.words,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: "Descrição do nível",
                   ),
-                  style: TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 20),
                 )),
             Container(
-                padding: EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.only(bottom: 8),
                 child: Row(
                   children: [
                     Expanded(
@@ -133,17 +132,17 @@ class _PlanoEstudoPageState extends State<PlanoEstudoPage> {
                           controller: qtdHorasCtrl,
                           keyboardType: TextInputType.text,
                           textCapitalization: TextCapitalization.words,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: "Quantidade de horas",
                           ),
-                          style: TextStyle(fontSize: 20),
+                          style: const TextStyle(fontSize: 20),
                         )),
                     Visibility(
                         visible: currentIndex == null,
                         child: Expanded(
                             flex: 1,
                             child: IconButton(
-                              icon: Icon(Icons.add),
+                              icon: const Icon(Icons.add),
                               onPressed: _addAoPlano,
                             ))),
                     Visibility(
@@ -151,7 +150,7 @@ class _PlanoEstudoPageState extends State<PlanoEstudoPage> {
                         child: Expanded(
                             flex: 1,
                             child: IconButton(
-                              icon: Icon(Icons.edit),
+                              icon: const Icon(Icons.edit),
                               onPressed: _AlterarDoPlano,
                             ))),
                   ],
@@ -200,12 +199,11 @@ class _PlanoEstudoPageState extends State<PlanoEstudoPage> {
                 )),
           ]),
       floatingActionButton: Visibility(
-        visible: _planoEstudo.titulo != null &&
-            _planoEstudo.titulo.trim().isNotEmpty &&
+        visible: _planoEstudo.titulo.trim().isNotEmpty &&
             _planoEstudo.niveis.isNotEmpty,
         child: FloatingActionButton(
           onPressed: () => _save(),
-          child: Icon(Icons.check),
+          child: const Icon(Icons.check),
         ),
       ),
     );
